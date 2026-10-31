@@ -28,6 +28,7 @@ class Entity(BaseModel):
 
 class MeetingStatus(StrEnum):
     SCHEDULED = "scheduled"
+    READY_FOR_ANALYSIS = "ready_for_analysis"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
     CANCELLED = "cancelled"
@@ -70,6 +71,8 @@ class Meeting(Entity):
     participants: list[str] = Field(default_factory=list)
     status: MeetingStatus = MeetingStatus.SCHEDULED
     source: Optional[str] = None
+    analysis_id: Optional[str] = None
+    analysis_version: Optional[int] = Field(default=None, ge=1)
 
 
 class TranscriptSegment(Entity):
@@ -88,6 +91,8 @@ class Decision(Entity):
     status: DecisionStatus = DecisionStatus.PROPOSED
     owner_id: Optional[str] = None
     evidence_ids: list[str] = Field(default_factory=list)
+    analysis_id: Optional[str] = None
+    analysis_version: Optional[int] = Field(default=None, ge=1)
 
 
 class ActionItem(Entity):
@@ -96,8 +101,12 @@ class ActionItem(Entity):
     description: Optional[str] = None
     status: ActionStatus = ActionStatus.OPEN
     owner_id: Optional[str] = None
+    owner_name: Optional[str] = None
     deadline: Optional[datetime] = None
     evidence_ids: list[str] = Field(default_factory=list)
+    is_commitment: bool = False
+    analysis_id: Optional[str] = None
+    analysis_version: Optional[int] = Field(default=None, ge=1)
 
 
 class Conflict(Entity):
@@ -114,6 +123,9 @@ class UnresolvedItem(Entity):
     owner_id: Optional[str] = None
     status: UnresolvedStatus = UnresolvedStatus.OPEN
     evidence_ids: list[str] = Field(default_factory=list)
+    kind: str = "question"
+    analysis_id: Optional[str] = None
+    analysis_version: Optional[int] = Field(default=None, ge=1)
 
 
 class Approval(Entity):

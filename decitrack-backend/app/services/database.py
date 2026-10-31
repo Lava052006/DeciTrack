@@ -4,7 +4,15 @@ from app.database.mongodb import database
 
 
 COLLECTION_INDEXES: dict[str, list[tuple[list[tuple[str, int]], dict]]] = {
-    "meetings": [([("id", 1)], {"unique": True}), ([ ("status", 1), ("started_at", -1)], {})],
+    "meetings": [
+        ([ ("id", 1)], {"unique": True}),
+        ([ ("status", 1), ("started_at", -1)], {}),
+        ([ ("source", 1)], {"unique": True, "partialFilterExpression": {"source": {"$type": "string"}}}),
+    ],
+    "meeting_analyses": [
+        ([ ("id", 1)], {"unique": True}),
+        ([ ("meeting_id", 1), ("version", 1)], {"unique": True}),
+    ],
     "transcript_segments": [([("id", 1)], {"unique": True}), ([ ("meeting_id", 1), ("sequence", 1)], {"unique": True})],
     "decisions": [([("id", 1)], {"unique": True}), ([ ("meeting_id", 1), ("status", 1)], {}), ([ ("owner_id", 1)], {})],
     "decision_history": [([("id", 1)], {"unique": True}), ([ ("decision_id", 1), ("created_at", -1)], {})],

@@ -4,12 +4,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database.mongodb import check_database_connection, client
 from app.services.database import initialize_collections
+from app.routers.meetings import router as meetings_router
 
 app = FastAPI(
     title="DeciTrack API",
     description="AI-powered organizational memory and decision tracking",
     version="1.0.0"
 )
+app.include_router(meetings_router)
 
 
 @app.on_event("startup")
